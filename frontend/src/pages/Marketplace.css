@@ -1,0 +1,95 @@
+.mkt-section {
+  padding-top: 120px;
+}
+
+.mkt-header {
+  margin-bottom: 80px;
+}
+
+.mkt-header h1 {
+  font-size: 5rem;
+  margin-bottom: 16px;
+}
+
+.mkt-header p {
+  font-family: var(--font-body);
+  color: var(--color-stone);
+}
+
+.mkt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 40px;
+}
+
+.mkt-card {
+  border: 1px solid var(--color-line);
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mkt-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.mkt-id {
+  font-family: var(--font-body);
+  color: var(--color-stone);
+  font-size: 0.85rem;
+}
+
+.mkt-status {
+  width: 8px;
+  height: 8px;
+  background-color: var(--color-signal);
+  border-radius: 50%;
+}
+
+.mkt-name {
+  font-size: 2.5rem;
+  margin-bottom: 40px;
+}
+
+.mkt-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 60px;
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 8px;
+}
+
+.stat-label {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-stone);
+}
+
+.stat-value {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.mkt-btn {
+  width: 100%;
+}
+
+.mkt-log {
+  margin-top: 24px;
+  background-color: var(--color-line);
+  padding: 16px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  overflow-x: auto;
+  white-space: pre-wrap;
+}

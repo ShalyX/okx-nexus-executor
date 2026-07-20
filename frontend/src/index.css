@@ -1,0 +1,91 @@
+:root {
+  --color-paper: #FCFCFC;
+  --color-ink: #0A0A0A;
+  --color-stone: #8A8A8A;
+  --color-signal: #E83114;
+  --color-line: #E5E5E5;
+  
+  --font-display: 'Cormorant Garamond', serif;
+  --font-body: 'IBM Plex Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.4;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+a {
+  color: var(--color-ink);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+a:hover {
+  opacity: 0.6;
+}
+
+/* Layout Utilities */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.section {
+  padding: 120px 0;
+  border-bottom: 1px solid var(--color-line);
+}
+
+/* Base button */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 32px;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid var(--color-ink);
+  background: transparent;
+  color: var(--color-ink);
+}
+
+.btn-primary {
+  background-color: var(--color-signal);
+  color: var(--color-paper);
+  border-color: var(--color-signal);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-ink);
+  border-color: var(--color-ink);
+  opacity: 1;
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+  opacity: 1;
+}

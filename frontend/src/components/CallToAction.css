@@ -1,0 +1,30 @@
+.cta-section {
+  padding-bottom: 120px;
+}
+
+.cta-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.cta-content {
+  max-width: 600px;
+}
+
+.cta-content h2 {
+  font-size: 5rem;
+  margin-bottom: 24px;
+  line-height: 0.9;
+}
+
+.cta-content p {
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--color-stone);
+}
+
+.cta-btn {
+  font-size: 1.1rem;
+  padding: 24px 48px;
+}
