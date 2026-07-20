@@ -3,7 +3,7 @@ services:
   - name: agent_redis
     type: redis
     region: ohio
-    plan: starter
+    plan: free
     ipAllowList: [] # Keep internal for security
 
   # 1. Node.js Auditor Backend
@@ -11,7 +11,7 @@ services:
     name: backend-auditor
     env: docker
     region: ohio
-    plan: starter
+    plan: free
     dockerfilePath: ./backend-auditor/Dockerfile
     envVars:
       - key: PORT
@@ -33,7 +33,7 @@ services:
     name: backend-trader
     env: docker
     region: ohio
-    plan: starter
+    plan: free
     dockerfilePath: ./backend-trader/Dockerfile
     envVars:
       - key: DATABASE_URL
@@ -57,7 +57,7 @@ services:
     name: frontend
     env: docker
     region: ohio
-    plan: starter
+    plan: free
     dockerfilePath: ./frontend/Dockerfile
     envVars:
       - key: VITE_AUDITOR_URL
