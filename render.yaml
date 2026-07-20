@@ -13,6 +13,7 @@ services:
     region: ohio
     plan: free
     dockerfilePath: ./backend-auditor/Dockerfile
+    dockerContext: ./backend-auditor
     envVars:
       - key: PORT
         value: "3001"
@@ -33,6 +34,7 @@ services:
     region: ohio
     plan: free
     dockerfilePath: ./backend-trader/Dockerfile
+    dockerContext: ./backend-trader
     envVars:
       - key: DATABASE_URL
         sync: false
@@ -55,6 +57,7 @@ services:
     region: ohio
     plan: free
     dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
     envVars:
       - key: VITE_AUDITOR_URL
         fromService:
