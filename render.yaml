@@ -1,4 +1,11 @@
 services:
+  # 5. Managed Redis (for BullMQ / Celery)
+  - name: agent_redis
+    type: redis
+    region: ohio
+    plan: starter
+    ipAllowList: [] # Keep internal for security
+
   # 1. Node.js Auditor Backend
   - type: web
     name: backend-auditor
@@ -71,10 +78,3 @@ databases:
     user: admin
     region: ohio
     plan: starter
-
-  # 5. Managed Redis (for BullMQ / Celery)
-  - name: agent_redis
-    type: redis
-    region: ohio
-    plan: starter
-    ipAllowList: [] # Keep internal for security
