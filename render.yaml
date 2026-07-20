@@ -17,9 +17,7 @@ services:
       - key: PORT
         value: "3001"
       - key: DATABASE_URL
-        fromDatabase:
-          name: agent_db
-          property: connectionString
+        sync: false
       - key: REDIS_URL
         fromService:
           type: redis
@@ -37,9 +35,7 @@ services:
     dockerfilePath: ./backend-trader/Dockerfile
     envVars:
       - key: DATABASE_URL
-        fromDatabase:
-          name: agent_db
-          property: connectionString
+        sync: false
       - key: REDIS_URL
         fromService:
           type: redis
@@ -71,10 +67,3 @@ services:
           name: backend-trader
           envVarKey: RENDER_EXTERNAL_URL
 
-databases:
-  # 4. Managed PostgreSQL
-  - name: agent_db
-    databaseName: agent_db
-    user: admin
-    region: ohio
-    plan: starter
