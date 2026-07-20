@@ -32,7 +32,7 @@ else
     }
   },
   "gateway": {
-    "mode": "cloud",
+    "mode": "remote",
     "auth": {
       "mode": "token",
       "token": "${GATEWAY_TOKEN:-openclaw_auth_token}"
