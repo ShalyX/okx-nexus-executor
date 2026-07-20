@@ -1,6 +1,6 @@
-FROM node:20-slim
+FROM node:22-slim
 
-RUN npm install -g @okxweb3/a2a-openclaw
+RUN npm install -g @okxweb3/a2a-node openclaw
 
 WORKDIR /gateway
 
