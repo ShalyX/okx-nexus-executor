@@ -70,3 +70,12 @@ services:
           name: backend-trader
           envVarKey: RENDER_EXTERNAL_URL
 
+  # 4. OpenClaw Gateway (A2A Mainnet Connector)
+  - type: web
+    name: gateway
+    env: docker
+    region: ohio
+    plan: free
+    dockerfilePath: ./gateway/Dockerfile
+    dockerContext: ./gateway
+
