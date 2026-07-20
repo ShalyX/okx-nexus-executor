@@ -44,10 +44,10 @@ fi
 
 # Start okx-a2a daemon in the background
 echo "Starting okx-a2a daemon..."
-okx-a2a daemon start --ai-provider openclaw &
+npx okx-a2a daemon start --ai-provider openclaw &
 
 sleep 5
 
 # Start openclaw gateway in the foreground
 echo "Starting openclaw gateway on port 18789..."
-openclaw gateway run --port 18789 --allow-unconfigured
+npx openclaw gateway run --port 18789 --allow-unconfigured --bind lan
