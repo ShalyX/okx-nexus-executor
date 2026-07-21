@@ -5,6 +5,8 @@ import hmac
 import hashlib
 import json
 import uuid
+import psycopg2
+from psycopg2.extras import DictCursor
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from celery import Celery
@@ -12,10 +14,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-OKX_API_KEY = os.getenv("OKX_API_KEY")
-OKX_SECRET_KEY = os.getenv("OKX_SECRET_KEY")
-OKX_PASSPHRASE = os.getenv("OKX_PASSPHRASE")
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Initialize Celery Queue
 celery_app = Celery('trader_queue', broker=REDIS_URL, backend=REDIS_URL)
@@ -36,32 +36,51 @@ def get_okx_signature(timestamp, method, request_path, body, secret_key):
     return base64.b64encode(d).decode('utf-8')
 
 @celery_app.task
-def process_trade_task(wallet_address: str):
-    # In production, we fetch BYOK from DB. Using global for testing.
-    if not all([OKX_API_KEY, OKX_SECRET_KEY, OKX_PASSPHRASE]):
-         return {"error": "OKX Mainnet credentials not set in .env"}
+def process_trade_task(data: dict):
+    wallet_address = data.get("walletAddress")
+    if not wallet_address:
+         return {"error": "Missing walletAddress"}
+         
+    sentiment = data.get("sentiment", "Bullish")
+    sz = data.get("sz", "0.1")
+    instId = data.get("instId", "ETH-USDT")
 
-    sentiment = "Bullish"
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        cur = conn.cursor(cursor_factory=DictCursor)
+        cur.execute('SELECT "okxApiKey", "okxSecretKey", "okxPassphrase" FROM "User" WHERE "walletAddress" = %s', (wallet_address,))
+        user_row = cur.fetchone()
+        cur.close()
+        conn.close()
+    except Exception as e:
+        return {"error": f"Database error: {str(e)}"}
+
+    if not user_row or not all([user_row["okxApiKey"], user_row["okxSecretKey"], user_row["okxPassphrase"]]):
+         return {"error": f"OKX Mainnet credentials not set for wallet {wallet_address}. Please configure BYOK."}
+
+    api_key = user_row["okxApiKey"]
+    secret_key = user_row["okxSecretKey"]
+    passphrase = user_row["okxPassphrase"]
     
     endpoint = '/api/v5/trade/order'
     body = {
-        "instId": "ETH-USDT",
+        "instId": instId,
         "tdMode": "cash",
         "side": "buy" if sentiment == "Bullish" else "sell",
         "ordType": "market",
-        "sz": "0.1"
+        "sz": str(sz)
     }
     
     body_str = json.dumps(body)
     
     timestamp = time.strftime("%Y-%m-%dT%H:%M:%S.000Z", time.gmtime())
-    signature = get_okx_signature(timestamp, 'POST', endpoint, body_str, OKX_SECRET_KEY)
+    signature = get_okx_signature(timestamp, 'POST', endpoint, body_str, secret_key)
     
     headers = {
-        'OK-ACCESS-KEY': OKX_API_KEY,
+        'OK-ACCESS-KEY': api_key,
         'OK-ACCESS-SIGN': signature,
         'OK-ACCESS-TIMESTAMP': timestamp,
-        'OK-ACCESS-PASSPHRASE': OKX_PASSPHRASE,
+        'OK-ACCESS-PASSPHRASE': passphrase,
         'x-simulated-trading': '1',
         'Content-Type': 'application/json'
     }
@@ -73,7 +92,7 @@ def process_trade_task(wallet_address: str):
         "sentiment": sentiment,
         "message": "Payload successfully signed for OKX v5 Demo Trading",
         "headers_generated": {
-            "OK-ACCESS-KEY": "***" + OKX_API_KEY[-4:] if OKX_API_KEY else "***",
+            "OK-ACCESS-KEY": "***" + api_key[-4:] if api_key else "***",
             "OK-ACCESS-SIGN": signature,
             "OK-ACCESS-TIMESTAMP": timestamp,
             "x-simulated-trading": "1"
@@ -84,10 +103,9 @@ def process_trade_task(wallet_address: str):
 @app.post("/api/trade-sentiment")
 async def queue_trade(request: Request):
     data = await request.json()
-    wallet_address = data.get("walletAddress", "0xAnonymous")
     
     # Send task to Celery Queue
-    task = process_trade_task.delay(wallet_address)
+    task = process_trade_task.delay(data)
     
     return {
         "status": "queued",

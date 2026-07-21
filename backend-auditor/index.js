@@ -93,10 +93,10 @@ const worker = new Worker('auditQueue', async job => {
   
   try {
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    // In production, we use user.geminiApiKey. Falling back to global for testing.
-    const apiKey = user.geminiApiKey || process.env.GEMINI_API_KEY;
+    // In production, we use user.geminiApiKey.
+    const apiKey = user.geminiApiKey;
     
-    if (!apiKey) throw new Error('GEMINI_API_KEY missing for user');
+    if (!apiKey) throw new Error('GEMINI_API_KEY missing for user. Please configure BYOK credentials.');
     
     const ai = new GoogleGenAI({ apiKey });
     
